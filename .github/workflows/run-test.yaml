@@ -4,7 +4,7 @@ on: [pull_request, push]
 
 env:
   HUSKY: 0
-  SOUNDBOKS_NPM_TOKEN: ${{ secrets.GH_PACKAGES_READ_TOKEN }}
+  GH_PACKAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   NODE_ENV: 'test'
 jobs:
   test:

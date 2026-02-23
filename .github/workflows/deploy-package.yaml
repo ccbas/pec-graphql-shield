@@ -7,6 +7,7 @@ on:
 
 env:
   HUSKY: 0
+  GH_PACKAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   publish:
@@ -28,8 +29,6 @@ jobs:
 
       - name: Install dependencies
         run: yarn --frozen-lockfile
-        env:
-          GH_PACKAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build package
         run: yarn build
