@@ -1,31 +1,54 @@
-name: Deploy package
+name: Build and publish package
+
 on:
-  push:
-    branches: [master]
+  release:
+    types: [published]
+  workflow_dispatch:
+
 env:
-  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  SOUNDBOKS_NPM_TOKEN: ${{ secrets.GH_PACKAGES_READ_TOKEN }}
-  NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   HUSKY: 0
+
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  publish:
+    runs-on: self-hosted
     permissions:
-      contents: write
+      contents: read
       packages: write
-      pull-requests: write
-      issues: write
-    strategy:
-      matrix:
-        node-version: [22.X]
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v6
         with:
-          node-version: ${{ matrix.node-version }}
-      - run: yarn
-      - run: yarn run build
-      - run: |
-          cp package.json yarn.lock README.md dist/ && rm .npmrc
-      - run: npx semantic-release@24
+          node-version: 24
+          registry-url: https://npm.pkg.github.com
+          scope: '@${{ github.repository_owner }}'
+
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+        env:
+          GH_PACKAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build package
+        run: yarn build
+
+      - name: Prepare publish metadata
+        run: |
+          cp README.md LICENSE dist/
+          OWNER_LOWER=$(echo "$GITHUB_REPOSITORY_OWNER" | tr '[:upper:]' '[:lower:]')
+          node -e "const fs=require('fs');const p='./dist/package.json';const pkg=JSON.parse(fs.readFileSync(p,'utf8'));pkg.name='@'+process.env.OWNER_LOWER+'/graphql-shield';fs.writeFileSync(p,JSON.stringify(pkg,null,2)+'\\n');"
+          VERSION="${GITHUB_REF_NAME#v}"
+          if [ -n "$VERSION" ] && [ "$VERSION" != "$GITHUB_REF_NAME" ]; then
+            cd dist
+            npm version "$VERSION" --no-git-tag-version
+          fi
+        env:
+          OWNER_LOWER: ${{ github.repository_owner }}
+
+      - name: Publish to GitHub Packages
+        run: npm publish --provenance
+        working-directory: dist
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
