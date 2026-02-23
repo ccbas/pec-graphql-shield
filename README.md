@@ -8,7 +8,7 @@ Fork from the original [graphql-shield](https://github.com/maticzav/graphql-shie
 
 ## Reason for fork
 
-The original repository stopped producing releases and after 3 years, we had to proceed with newer versions of graphql which wasnt supported.
+The original repository stopped producing releases and after 3 years, we had to proceed with newer versions of nodejs which wasnt supported.
 
 ## Overview
 
