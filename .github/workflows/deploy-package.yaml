@@ -1,53 +1,76 @@
-name: Build and publish package
-
-on:
-  release:
-    types: [published]
-  workflow_dispatch:
-
-env:
-  HUSKY: 0
-  GH_PACKAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
 jobs:
   publish:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       contents: read
       packages: write
+      id-token: write
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Use Node.js 24
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: 24
           registry-url: https://npm.pkg.github.com
           scope: '@${{ github.repository_owner }}'
 
       - name: Install dependencies
+        env:
+          HUSKY: 0
         run: yarn --frozen-lockfile
 
       - name: Build package
         run: yarn build
 
-      - name: Prepare publish metadata
+      - name: Prepare publish metadata (name + version from tag)
+        shell: bash
         run: |
+          set -euo pipefail
+
           cp README.md LICENSE dist/
-          OWNER_LOWER=$(echo "$GITHUB_REPOSITORY_OWNER" | tr '[:upper:]' '[:lower:]')
-          node -e "const fs=require('fs');const p='./dist/package.json';const pkg=JSON.parse(fs.readFileSync(p,'utf8'));pkg.name='@'+process.env.OWNER_LOWER+'/graphql-shield';fs.writeFileSync(p,JSON.stringify(pkg,null,2)+'\\n');"
-          VERSION="${GITHUB_REF_NAME#v}"
-          if [ -n "$VERSION" ] && [ "$VERSION" != "$GITHUB_REF_NAME" ]; then
-            cd dist
-            npm version "$VERSION" --no-git-tag-version
+
+          # Determine version from ref (supports tags like v7.6.6 or 7.6.6)
+          REF="${GITHUB_REF_NAME}"
+          VERSION="${REF#v}"
+
+          if [[ -z "$VERSION" || "$VERSION" == "$REF" && ! "$REF" =~ ^[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+            echo "ERROR: GITHUB_REF_NAME ('$GITHUB_REF_NAME') does not look like a semver tag (e.g. v7.6.6 or 7.6.6)"
+            exit 1
           fi
+
+          OWNER_LOWER="$(echo "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')"
+
+          node - <<'NODE'
+          const fs = require('fs');
+          const path = './dist/package.json';
+
+          const ownerLower = process.env.OWNER_LOWER;
+          const version = process.env.VERSION;
+
+          const pkg = JSON.parse(fs.readFileSync(path, 'utf8'));
+          pkg.name = `@${ownerLower}/graphql-shield`;
+          pkg.version = version;
+
+          fs.writeFileSync(path, JSON.stringify(pkg, null, 2) + '\n');
+
+          console.log('Prepared dist/package.json:');
+          console.log('  name   =', pkg.name);
+          console.log('  version=', pkg.version);
+          NODE
         env:
           OWNER_LOWER: ${{ github.repository_owner }}
+          VERSION: ${{ github.ref_name }}
+
+      - name: Verify package.json in dist
+        shell: bash
+        run: |
+          node -e "const p=require('./dist/package.json'); console.log('Publishing:', p.name, p.version)"
 
       - name: Publish to GitHub Packages
-        run: npm publish --provenance
         working-directory: dist
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm publish --provenance
