@@ -1,5 +1,4 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
-// Using native fetch available in Node.js >=18
 import { applyMiddleware } from 'graphql-middleware';
 import { ApolloServer } from '@apollo/server';
 import { gql } from 'graphql-tag';
