@@ -8,12 +8,6 @@ coverage
 .history
 .nyc_output
 
-package-lock.json
-
-.yarn/cache
-.yarn/install-state.gz
-.yarn/build-state.yml
-
 tsconfig.tsbuildinfo
 
 # Yarn Integrity file
