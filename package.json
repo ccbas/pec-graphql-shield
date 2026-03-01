@@ -1,6 +1,6 @@
 {
-  "name": "@soundboks/graphql-shield",
-  "version": "1.0.0",
+  "name": "@ccbas/pec-graphql-shield",
+  "version": "7.6.7",
   "author": "Matic Zavadlal <matic.zavadlal@gmail.com>",
   "license": "MIT",
   "contributors": [
@@ -8,7 +8,7 @@
     "Sander Blomvågnes <sander@blinq.no>"
   ],
   "repository": {
-    "url": "git://github.com/SOUNDBOKS/graphql-shield.git"
+    "url": "git://github.com/ccbas/pec-graphql-shield.git"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
