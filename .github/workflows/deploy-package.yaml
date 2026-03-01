@@ -28,10 +28,10 @@ jobs:
           scope: '@${{ github.repository_owner }}'
 
       - name: Install dependencies
-        run: yarn --frozen-lockfile
+        run: npm ci
 
       - name: Build package
-        run: yarn build
+        run: npm run build
 
       - name: Prepare publish metadata
         run: |
