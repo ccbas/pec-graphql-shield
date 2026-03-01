@@ -5,9 +5,3 @@ exports[`input rule > schema validation works as expected 1`] = `
   [GraphQLError: It has to be an email!],
 ]
 `;
-
-exports[`input rule schema validation works as expected 1`] = `
-[
-  [GraphQLError: It has to be an email!],
-]
-`;

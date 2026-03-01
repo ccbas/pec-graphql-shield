@@ -26,7 +26,7 @@
   },
   "scripts": {
     "prepare": "husky",
-    "test": "vitest tests",
+    "test": "vitest tests --run",
     "test:ci": "vitest --coverage",
     "prerelease": "npm run build",
     "prettier": "prettier --ignore-path .gitignore --write --list-different \"**/*.{ts,tsx,graphql,yml}\"",
@@ -69,6 +69,6 @@
     "semantic-release": "25.0.3",
     "typescript": "5.9.3",
     "typescript-eslint": "^8.41.0",
-    "vitest": "^3.2.4"
+    "vitest": "^4.0.18"
   }
 }
