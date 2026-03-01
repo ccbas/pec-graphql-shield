@@ -4,7 +4,7 @@
 
 > GraphQL Server permissions as another layer of abstraction!
 
-Fork from the original [graphql-shield](https://github.com/maticzav/graphql-shield) with modifications to exist in the soundboks ecosystem. Only supports ESM!
+Fork from the original [graphql-shield](https://github.com/maticzav/graphql-shield)
 
 ## Reason for fork
 
