@@ -1,6 +1,12 @@
 name: Lint and format checks
 
-on: [pull_request, push]
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
 
 env:
   HUSKY: 0
@@ -8,18 +14,15 @@ env:
 jobs:
   lint-format:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [22.x]
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 24.x
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 24.x
 
       - name: Install dependencies
         run: npm ci
