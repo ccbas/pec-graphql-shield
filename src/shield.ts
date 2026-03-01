@@ -1,4 +1,4 @@
-import hash from 'object-hash';
+import { stableHash } from 'stable-hash';
 import { middleware, type IMiddlewareGenerator } from 'graphql-middleware';
 import { ValidationError, validateRuleTree } from './validation.js';
 import type { IRules, IOptions, IOptionsConstructor, ShieldRule, IHashFunction, IFallbackErrorType } from './types.js';
@@ -24,7 +24,7 @@ function normalizeOptions(options: IOptionsConstructor): IOptions {
     allowExternalErrors: withDefault(false)(options.allowExternalErrors),
     fallbackRule: withDefault<ShieldRule>(allow)(options.fallbackRule),
     fallbackError: withDefault<IFallbackErrorType>(new Error('Not Authorised!'))(options.fallbackError),
-    hashFunction: withDefault<IHashFunction>(hash)(options.hashFunction),
+    hashFunction: withDefault<IHashFunction>((input) => stableHash(input))(options.hashFunction),
   };
 }
 
