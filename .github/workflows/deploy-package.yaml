@@ -29,12 +29,10 @@ jobs:
           scope: '@${{ github.repository_owner }}'
 
       - name: Install dependencies
-        env:
-          HUSKY: 0
-        run: yarn --frozen-lockfile
+        run: npm ci
 
       - name: Build package
-        run: yarn build
+        run: npm run build
 
       - name: Prepare publish metadata (name + version from tag)
         shell: bash

@@ -197,14 +197,14 @@ export class Rule implements IRule {
 export class InputRule<T> extends Rule {
   constructor(
     name: string,
-    schema: (yup: typeof Yup, ctx: IShieldContext) => Yup.BaseSchema<T>,
-    options?: Parameters<Yup.BaseSchema<T>['validate']>[1],
+    schema: (yup: typeof Yup, ctx: IShieldContext) => Yup.AnySchema<T>,
+    options?: Parameters<Yup.AnySchema<T>['validate']>[1],
   ) {
-    const validationFunction: IRuleFunction = (_parent: object, args: object, ctx: IShieldContext) =>
+    const validationFunction: IRuleFunction = (_parent: object, args: object, ctx: IShieldContext, _info: GraphQLResolveInfo) =>
       schema(Yup, ctx)
         .validate(args, options)
         .then(() => true)
-        .catch((err) => err);
+        .catch((err: unknown) => (err instanceof Error ? err : new Error(String(err))));
 
     super(name, validationFunction, { cache: 'strict', fragment: undefined });
   }

@@ -1,16 +1,20 @@
 {
-  "name": "@soundboks/graphql-shield",
-  "version": "1.0.0",
+  "name": "@ccbas/pec-graphql-shield",
+  "version": "7.6.7",
   "author": "Matic Zavadlal <matic.zavadlal@gmail.com>",
   "license": "MIT",
   "contributors": [
-    "Rasmus Letterkrantz <rasmus@soundboks.com>"
+    "Rasmus Letterkrantz <rasmus@soundboks.com>",
+    "Sander Blomvågnes <sander@blinq.no>"
   ],
   "repository": {
-    "url": "git://github.com/SOUNDBOKS/graphql-shield.git"
+    "url": "git://github.com/ccbas/pec-graphql-shield.git"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   },
   "type": "module",
   "main": "./index.js",
@@ -24,23 +28,21 @@
     "prepare": "husky",
     "test": "vitest tests",
     "test:ci": "vitest --coverage",
-    "prerelease": "yarn build",
+    "prerelease": "npm run build",
     "prettier": "prettier --ignore-path .gitignore --write --list-different \"**/*.{ts,tsx,graphql,yml}\"",
     "transpile": "tsc --project tsconfig.build.json",
-    "build": "yarn build:clean && yarn transpile && cp package.json ./dist",
-    "build:watch": "chokidar \"src/*.*\"  -c \"yarn build\" --initial",
+    "build": "npm run build:clean && npm run transpile && cp package.json ./dist",
+    "build:watch": "chokidar \"src/*.*\"  -c \"npm run build\" --initial",
     "build:docs": "typedoc",
     "build:clean": "rimraf ./dist",
     "type-check": "tsc --noEmit",
-    "postbuild": "npm link",
     "lint": "eslint 'src/**/*.ts' 'tests/**/*.ts'",
     "lint:fix": "eslint 'src/**/*.ts' 'tests/**/*.ts' --fix"
   },
   "dependencies": {
-    "@types/yup": "0.29.13",
     "graphql-tag": "^2.12.6",
     "object-hash": "^3.0.0",
-    "yup": "^0.32.0"
+    "yup": "^1.7.1"
   },
   "peerDependencies": {
     "graphql": "^16.11.0",
@@ -55,7 +57,6 @@
     "@graphql-tools/schema": "8.5.1",
     "@semantic-release/git": "^10.0.1",
     "@types/node": "24.3.0",
-    "@types/node-fetch": "^2.6.2",
     "@types/object-hash": "2.2.1",
     "eslint": "^9.34.0",
     "eslint-config-prettier": "^10.1.8",
@@ -63,7 +64,6 @@
     "graphql": "16.11.0",
     "graphql-middleware": "6.1.35",
     "husky": "9.1.7",
-    "node-fetch": "^2.6.7",
     "prettier": "3.6.2",
     "rimraf": "^6.0.1",
     "semantic-release": "24.2.7",

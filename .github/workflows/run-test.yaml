@@ -11,13 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [22.X]
+        node-version: [22.X, 24.X, 25.X]
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - run: yarn
-      - run: yarn run type-check
-      - run: yarn run test
+      - run: npm ci
+      - run: npm run type-check
+      - run: npm test
