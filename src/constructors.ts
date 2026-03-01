@@ -57,10 +57,7 @@ export const rule =
  */
 export const inputRule =
   <T>(name?: string) =>
-  (
-    schema: (yup: typeof Yup, ctx: IShieldContext) => Yup.BaseSchema<T>,
-    options?: Parameters<Yup.BaseSchema<T>['validate']>[1],
-  ) => {
+  (schema: (yup: typeof Yup, ctx: IShieldContext) => Yup.AnySchema<T>, options?: Parameters<Yup.AnySchema<T>['validate']>[1]) => {
     if (typeof name === 'string') {
       return new InputRule(name, schema, options);
     } else {
