@@ -55,11 +55,13 @@ describe('integration tests', () => {
       headers: { 'Content-Type': 'application/json' },
     }).then((res) => res.json());
 
-    expect(res.data).toEqual({
+    type GraphQLResponse = { data?: { allow: string; deny: string | null }; errors?: any[] };
+    const typedRes = res as GraphQLResponse;
+    expect(typedRes.data).toEqual({
       allow: 'allow',
       deny: null,
     });
-    expect(res.errors.length).toBe(1);
+    expect(typedRes.errors?.length).toBe(1);
 
     await server.stop();
   });

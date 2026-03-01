@@ -4,7 +4,8 @@
   "author": "Matic Zavadlal <matic.zavadlal@gmail.com>",
   "license": "MIT",
   "contributors": [
-    "Rasmus Letterkrantz <rasmus@soundboks.com>"
+    "Rasmus Letterkrantz <rasmus@soundboks.com>",
+    "Sander Blomvågnes <sander@blinq.no>"
   ],
   "repository": {
     "url": "git://github.com/SOUNDBOKS/graphql-shield.git"
@@ -36,10 +37,9 @@
     "lint:fix": "eslint 'src/**/*.ts' 'tests/**/*.ts' --fix"
   },
   "dependencies": {
-    "@types/yup": "0.29.13",
     "graphql-tag": "^2.12.6",
     "object-hash": "^3.0.0",
-    "yup": "^0.32.0"
+    "yup": "^1.7.1"
   },
   "peerDependencies": {
     "graphql": "^16.11.0",
